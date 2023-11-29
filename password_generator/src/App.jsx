@@ -1,34 +1,88 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState,useCallback, useEffect } from 'react'
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+const [length,setlength]=useState(8);
+const [char,setchar]=useState(false);
+const [num,setnum]=useState(false);
+const [password,setpassword]=useState("mudit");
+
+
+const passgenerator=useCallback(()=>{
+ let pass="";
+ let str="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+ if(num)str+="0123456789";
+ if(char)str+="!@#$%^&*-_+=[]{}~`"
+ 
+ for(let i=1;i<=length;i++)
+ {
+  let chars=Math.floor(Math.random()*str.length+1)
+  pass+=str.charAt(chars);
+
+ }
+ setpassword(pass);
+},[length,char,num,setpassword])
+
+useEffect(()=>{
+passgenerator();
+},[length,num,char,passgenerator])
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='w-full max-w-md mx-auto rounded-lg  px-4,my-8
+    bg-gray-700 text-orange-500  text-center'>
+      <h1 className='text-white text-center my-3'>Password generator</h1>
+      <div className='className="flex shadow rounded-lg
+      overflow-hidden mb-4"'>
+       <input
+  type="text"
+  value={password}
+  class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-4 leading-tight focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+  placeholder="Password"
+  readonly
+/>
+  <button className='outline-none bg-blue-700 text-white px-3
+   py-0.5 shrink-0'>Copy</button>
+  </div>
+  <div className='flex text-sm gap-x-2'>
+    <div className='flex-items-center gap-x-1'>
+      <input
+       type="range"
+       min ={6}
+       max ={100}
+       value={length}
+       className='cursor-pointer'
+       onChange={(e)=>{setlength(e.target.value)}}
+       />
+       <label>Length: {length}</label>
+    </div>
+    <div className='flex-items-center gap-x-1'>
+      <input 
+      type="checkbox"
+      defaultChecked={num}
+      id="numberInput"
+      onChange={()=>{
+        setnum((prev)=>!prev)
+      }
+    }
+      />
+      <label htmlFor='numberInput'>Numbers</label>
+    </div>
+    <div className='flex-item-center gap-x-1'>
+      <input type="checkbox"
+       defaultChecked={char}
+       id="charInput"
+       onChange={()=>{
+        setchar((prev)=>!prev)
+       }
+      }
+      />
+      <label htmlFor="charInput">Characters</label>
+    </div>
+  </div>
+ </div>
+ </>
   )
 }
 
