@@ -1,4 +1,4 @@
-import { useState,useCallback, useEffect } from 'react'
+import { useState,useCallback, useEffect, useRef } from 'react'
 
 
 
@@ -8,7 +8,7 @@ const [char,setchar]=useState(false);
 const [num,setnum]=useState(false);
 const [password,setpassword]=useState("mudit");
 
-
+const passwordref=useRef(null);
 const passgenerator=useCallback(()=>{
  let pass="";
  let str="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -22,8 +22,11 @@ const passgenerator=useCallback(()=>{
 
  }
  setpassword(pass);
-},[length,char,num,setpassword])
-
+},[length,char,num])
+const copypassword=useCallback(()=>{
+passwordref.current?.select()
+window.navigator.clipboard.writeText(password);
+},[password])
 useEffect(()=>{
 passgenerator();
 },[length,num,char,passgenerator])
@@ -41,8 +44,10 @@ passgenerator();
   class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-4 leading-tight focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
   placeholder="Password"
   readonly
+  ref={passwordref}
 />
-  <button className='outline-none bg-blue-700 text-white px-3
+  <button onClick={copypassword}
+  className='outline-none bg-blue-700 text-white px-3
    py-0.5 shrink-0'>Copy</button>
   </div>
   <div className='flex text-sm gap-x-2'>
